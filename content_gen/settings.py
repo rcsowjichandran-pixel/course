@@ -40,6 +40,13 @@ ALLOWED_HOSTS = [
     ).split(',')
     if host.strip()
 ]
+for vercel_host in (
+    os.environ.get('VERCEL_URL'),
+    os.environ.get('VERCEL_BRANCH_URL'),
+    os.environ.get('VERCEL_PROJECT_PRODUCTION_URL'),
+):
+    if vercel_host and vercel_host not in ALLOWED_HOSTS:
+        ALLOWED_HOSTS.append(vercel_host)
 
 SECURE_SSL_REDIRECT = os.environ.get(
     'DJANGO_SECURE_SSL_REDIRECT',
