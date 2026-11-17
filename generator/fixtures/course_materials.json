@@ -1,0 +1,81 @@
+[
+  {
+    "model": "auth.user",
+    "pk": 1,
+    "fields": {
+      "password": "!",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "fixture-teacher",
+      "first_name": "Casey",
+      "last_name": "Teacher",
+      "email": "",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2025-01-01T00:00:00Z",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "generator.coursetopic",
+    "pk": 1,
+    "fields": {
+      "title": "The water cycle",
+      "teacher": 1
+    }
+  },
+  {
+    "model": "generator.quiz",
+    "pk": 1,
+    "fields": {
+      "course_topic": 1,
+      "title": "Water cycle quiz",
+      "description": "Review the main stages of the water cycle."
+    }
+  },
+  {
+    "model": "generator.question",
+    "pk": 1,
+    "fields": {
+      "quiz": 1,
+      "question_text": "Which process changes liquid water into vapor?"
+    }
+  },
+  {
+    "model": "generator.answer",
+    "pk": 1,
+    "fields": {
+      "question": 1,
+      "answer_text": "Evaporation",
+      "is_correct": true
+    }
+  },
+  {
+    "model": "generator.answer",
+    "pk": 2,
+    "fields": {
+      "question": 1,
+      "answer_text": "Condensation",
+      "is_correct": false
+    }
+  },
+  {
+    "model": "generator.generatedcontent",
+    "pk": 1,
+    "fields": {
+      "course_topic": 1,
+      "quiz": 1,
+      "notes": "Water moves between the atmosphere and the Earth's surface.",
+      "key_points": "Evaporation\nCondensation\nPrecipitation"
+    }
+  },
+  {
+    "model": "generator.summary",
+    "pk": 1,
+    "fields": {
+      "course_topic": 1,
+      "summary_text": "The water cycle describes the continuous movement of water."
+    }
+  }
+]

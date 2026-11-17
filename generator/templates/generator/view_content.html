@@ -1,0 +1,80 @@
+{% extends "generator/base.html" %}
+
+{% block title %}{{ topic.title }} · Course Studio{% endblock %}
+
+{% block content %}
+    <a class="back-link" href="{% url 'generator:student_dashboard' %}">← All courses</a>
+    <div class="page-heading">
+        <p class="eyebrow">Course topic</p>
+        <h1>{{ topic.title }}</h1>
+        {% if content %}
+            <p>
+                <a class="button button-secondary" href="{% url 'generator:export_pdf' topic.id %}">
+                    Download study material as PDF
+                </a>
+            </p>
+        {% endif %}
+    </div>
+    {% if content %}
+        <div class="content-stack">
+            {% if summary %}
+                <section class="content-panel">
+                    <p class="eyebrow">At a glance</p>
+                    <h2>Summary</h2>
+                    {{ summary.summary_text|linebreaks }}
+                </section>
+            {% endif %}
+            <section class="content-panel">
+                <h2>Notes</h2>
+                {{ content.notes|linebreaks }}
+            </section>
+            <section class="content-panel">
+                <h2>Key points</h2>
+                <ul class="key-points">
+                    {% for point in key_points %}
+                        <li>{{ point }}</li>
+                    {% empty %}
+                        <li>No key points are available.</li>
+                    {% endfor %}
+                </ul>
+            </section>
+            {% if content.quiz %}
+                <section class="content-panel">
+                    <p class="eyebrow">Knowledge check</p>
+                    <h2>{{ content.quiz.title }}</h2>
+                    {{ content.quiz.description|linebreaks }}
+                    <form method="post" action="{% url 'generator:submit_quiz' topic.id %}">
+                        {% csrf_token %}
+                        {% for question in content.quiz.questions.all %}
+                            <fieldset class="quiz-question">
+                                <legend>{{ forloop.counter }}. {{ question.question_text }}</legend>
+                                {% for answer in question.answers.all %}
+                                    <label class="quiz-option" for="answer-{{ answer.id }}">
+                                        <input
+                                            id="answer-{{ answer.id }}"
+                                            type="radio"
+                                            name="question_{{ question.id }}"
+                                            value="{{ answer.id }}"
+                                            required
+                                        >
+                                        <span>{{ answer.answer_text }}</span>
+                                    </label>
+                                {% endfor %}
+                            </fieldset>
+                        {% endfor %}
+                        <button type="submit">Submit answers</button>
+                    </form>
+                </section>
+            {% else %}
+                <section class="empty-state">
+                    <p>No quiz is available for this topic yet.</p>
+                </section>
+            {% endif %}
+        </div>
+    {% else %}
+        <section class="empty-state">
+            <h2>Materials are not ready</h2>
+            <p>There is no generated content for this topic yet.</p>
+        </section>
+    {% endif %}
+{% endblock %}

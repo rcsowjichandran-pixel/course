@@ -1,0 +1,37 @@
+{% extends "generator/base.html" %}
+
+{% block title %}Student dashboard · Course Studio{% endblock %}
+
+{% block content %}
+    <div class="page-heading">
+        <p class="eyebrow">Learning space</p>
+        <h1>Your courses</h1>
+        <p class="lead">Browse a topic, review the learning materials, and check your understanding with a quiz.</p>
+    </div>
+    {% if topics %}
+        <div class="topic-grid">
+            {% for topic in topics %}
+                <article class="card topic-card">
+                    <span class="topic-icon" aria-hidden="true">{{ forloop.counter }}</span>
+                    <h2>{{ topic.title }}</h2>
+                    {% if topic.latest_summary %}
+                        <p>{{ topic.latest_summary.summary_text|truncatechars:170 }}</p>
+                    {% elif topic.latest_content %}
+                        <p>{{ topic.latest_content.notes|truncatechars:170 }}</p>
+                    {% else %}
+                        <p>Learning materials for this topic are coming soon.</p>
+                    {% endif %}
+                    {% if topic.latest_content.quiz %}
+                        <span class="badge">Quiz available</span>
+                    {% endif %}
+                    <a class="button" href="{% url 'generator:view_content' topic.id %}">Open course</a>
+                </article>
+            {% endfor %}
+        </div>
+    {% else %}
+        <section class="empty-state">
+            <h2>No courses yet</h2>
+            <p>When course topics are published, they will appear here.</p>
+        </section>
+    {% endif %}
+{% endblock %}

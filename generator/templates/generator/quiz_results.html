@@ -1,0 +1,34 @@
+{% extends "generator/base.html" %}
+
+{% block title %}Quiz results · {{ topic.title }}{% endblock %}
+
+{% block content %}
+    <a class="back-link" href="{% url 'generator:view_content' topic.id %}">← Back to course</a>
+    <div class="page-heading">
+        <p class="eyebrow">{{ quiz.title }}</p>
+        <h1>Quiz results</h1>
+    </div>
+    <section class="result-panel">
+        <div class="score-banner">
+            <div>
+                <h2>Your score</h2>
+                <p>{{ score }} correct out of {{ total }} questions</p>
+            </div>
+            <span class="score-value">{{ percentage }}%</span>
+        </div>
+    </section>
+    <div class="content-stack results-list">
+        {% for result in results %}
+            <article class="result-panel {% if result.is_correct %}answer-correct{% else %}answer-incorrect{% endif %}">
+                <h2>{{ forloop.counter }}. {{ result.question.question_text }}</h2>
+                <p class="answer-status {% if result.is_correct %}correct{% else %}incorrect{% endif %}">
+                    {% if result.is_correct %}Correct{% else %}Not quite{% endif %}
+                </p>
+                <p>Your answer: {% if result.selected_answer %}{{ result.selected_answer.answer_text }}{% else %}Not answered{% endif %}</p>
+                {% if not result.is_correct and result.correct_answer %}
+                    <p>Correct answer: <strong>{{ result.correct_answer.answer_text }}</strong></p>
+                {% endif %}
+            </article>
+        {% endfor %}
+    </div>
+{% endblock %}

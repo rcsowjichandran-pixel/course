@@ -1,0 +1,51 @@
+{% extends "generator/base.html" %}
+
+{% block title %}{{ content.course_topic.title }} · Course Studio{% endblock %}
+
+{% block content %}
+    <a class="back-link" href="{% url 'generator:student_dashboard' %}">← Student home</a>
+    <div class="page-heading">
+        <p class="eyebrow">Teacher preview</p>
+        <h1>{{ content.course_topic.title }}</h1>
+        <p>
+            <a class="button button-secondary" href="{% url 'generator:export_pdf' content.course_topic.id %}">
+                Download PDF
+            </a>
+        </p>
+    </div>
+    <div class="content-stack">
+        {% if summary %}
+            <section class="content-panel">
+                <h2>Summary</h2>
+                {{ summary.summary_text|linebreaks }}
+            </section>
+        {% endif %}
+        <section class="content-panel">
+            <h2>Notes</h2>
+            {{ content.notes|linebreaks }}
+        </section>
+        <section class="content-panel">
+            <h2>Key points</h2>
+            {{ content.key_points|linebreaks }}
+        </section>
+        {% if content.quiz %}
+            <section class="content-panel">
+                <h2>{{ content.quiz.title }}</h2>
+                {{ content.quiz.description|linebreaks }}
+                {% for question in content.quiz.questions.all %}
+                    <article>
+                        <h3>{{ forloop.counter }}. {{ question.question_text }}</h3>
+                        <ul>
+                            {% for answer in question.answers.all %}
+                                <li>
+                                    {{ answer.answer_text }}
+                                    {% if answer.is_correct %}<strong>(Correct)</strong>{% endif %}
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </article>
+                {% endfor %}
+            </section>
+        {% endif %}
+    </div>
+{% endblock %}

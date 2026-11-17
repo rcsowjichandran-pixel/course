@@ -1,0 +1,18 @@
+{% extends "generator/base.html" %}
+
+{% block title %}Create course content · Course Studio{% endblock %}
+
+{% block content %}
+    <div class="page-heading">
+        <p class="eyebrow">Teacher workspace</p>
+        <h1>Create course content</h1>
+        <p class="lead">Choose a topic to build study notes, a summary, and a quiz.</p>
+    </div>
+    <section class="form-panel">
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Generate learning materials</button>
+        </form>
+    </section>
+{% endblock %}
