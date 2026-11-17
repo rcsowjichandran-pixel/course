@@ -299,10 +299,21 @@ async def generate_content(request):
                     status=503,
                 )
             except requests.HTTPError as exc:
-                status_code = (
-                    exc.response.status_code if exc.response else 'unknown'
-                )
-                logger.warning('Gemini API returned HTTP %s', status_code)
+                response = exc.response
+                status_code = response.status_code if response else 'unknown'
+                if response is not None:
+                    # Keep the response body for diagnosis, but never log the
+                    # request URL because the API key is sent as a query value.
+                    error_body = response.text[:1000]
+                    logger.warning(
+                        'Gemini API returned HTTP %s: %s',
+                        status_code,
+                        error_body,
+                    )
+                else:
+                    logger.warning(
+                        'Gemini API raised HTTPError without a response object'
+                    )
                 messages.error(
                     request,
                     f'Gemini returned HTTP {status_code}. Check API key access, '
